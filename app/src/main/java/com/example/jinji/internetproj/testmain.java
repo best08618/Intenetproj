@@ -20,12 +20,22 @@ public class testmain extends AppCompatActivity {
     {
         System.loadLibrary("jniExample");
     }
+
     public native int LEDControl(int value);
+    public native int soundControl(int val);
+    public native int TextLCDOut(String str, String str2);
+    public native int IOCtlClear();
+    public native int IOCtlReturnHome();
+    public native int IOCtlDisplay(boolean bOn);
+    public native int IOCtlCursor(boolean bOn);
+    public native int IOCtlBlink(boolean bOn);
 
     final static int LED[] = {0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
+    final int SOUND = 0x06;
     int LedData;
     TextView score_tv, time_tv, notify, stage_num;
     Timer timer;
+    Timer timer_led;
     Button button[] = new Button[9];
     int data[] = new int[12];
     int stage;
@@ -35,6 +45,10 @@ public class testmain extends AppCompatActivity {
     int i;
     int j;
     int num;
+    int led_num;
+    //variables for textLCD
+    int text;
+    boolean disp,cursor,blink;
     Intent intent;
     //SoundPool sound = new SoundPool(1, AudioManager.STREAM_ALARM, 0);// maxStreams, streamType, srcQuality
 
@@ -56,6 +70,14 @@ public class testmain extends AppCompatActivity {
         // 시간을 측정할 쓰레드 시작
         //  TimeCountThread timeCountThread = new TimeCountThread();
         // timeCountThread.start();
+        disp = true; cursor = false; blink = false;
+        IOCtlClear();
+        IOCtlReturnHome();
+        IOCtlDisplay(disp);
+        IOCtlCursor(cursor);
+        IOCtlBlink(blink);
+
+        text = TextLCDOut("    Hello    ", "  Brain Game!  ");
 
         button[0] = (Button) findViewById(R.id.button00);
         button[1] = (Button) findViewById(R.id.button01);
@@ -68,6 +90,7 @@ public class testmain extends AppCompatActivity {
         button[8] = (Button) findViewById(R.id.button08);
         score_tv.setText("" + score);
         LEDControl(LedData);
+        soundControl(0);
         setRandomItem();
 
         // 무작위로 아이템을 배열한다
@@ -76,6 +99,7 @@ public class testmain extends AppCompatActivity {
     }
 
     public void showDialog(String str) {
+        soundControl(0);
         AlertDialog.Builder builder = new AlertDialog.Builder(this); //먼저 다이어로그를 build를 통해 만들어낸다.
         View chooseLayout = View.inflate(this, R.layout.dialog, null);//어떤 layout을 다이어로그에 띄울것인지 정해준다.
         TextView text = chooseLayout.findViewById(R.id.text_part);
@@ -94,8 +118,11 @@ public class testmain extends AppCompatActivity {
             i.putExtra("led_data", LedData);
             startActivity(i);
         } else {
-            Intent i = new Intent(testmain.this, appmain.class);
+            text = TextLCDOut("  !FINISH!  ", "      "+stage);
+            rainbowLED();
+            Intent i = new Intent(getApplicationContext(),appmain.class);
             startActivity(i);
+
         }
         // finish();
     }
@@ -128,6 +155,7 @@ public class testmain extends AppCompatActivity {
     }
 
     public void onButtonClick4(View v) {
+
         if (data[num] != 3) {
             showDialog("false");
             timer.cancel();
@@ -180,6 +208,29 @@ public class testmain extends AppCompatActivity {
         num++;
         score = score + 10 * stage;
     }
+    public void rainbowLED(){
+            timer_led = new Timer();
+            led_num= 0;
+        timer_led.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (led_num < 8) {
+                    button[1].post(new Runnable() {
+                        public void run() {
+                                LEDControl(LED[led_num]);
+                                led_num ++ ;
+                            }
+                    });
+
+                    //timer.cancel();
+                } else {
+                    LEDControl(0);
+                    IOCtlClear();
+                    timer_led.cancel();
+                }
+            }
+        }, 100, 100);
+    }
 
     public void setRandomItem() {
         // 위치 정보 초기화
@@ -190,16 +241,19 @@ public class testmain extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                text = TextLCDOut("  NOW ON STAGE  ", "       "+stage);
                 if (j >= (stage * 3)) {
                     button[1].post(new Runnable() {
                         public void run() {
                             reset();
+                            soundControl(0);
                             notify.setText("Enter button");
                             score_tv.setText(""+score);
                             if (num == (stage * 3)) {
                                 LedData |= LED[stage-1];
                                 LEDControl(LedData);
                                 showDialog("Complete");
+                                soundControl(0);
                                 timer.cancel();
                             }
                         }
@@ -207,6 +261,7 @@ public class testmain extends AppCompatActivity {
 
                     //timer.cancel();
                 } else {
+                    soundControl(0);
                     Random rand = new Random();
                     index = rand.nextInt(9);
                     if (j > 0)
@@ -221,6 +276,7 @@ public class testmain extends AppCompatActivity {
                             if (j > 0)
                                 button[data[j - 1]].setBackgroundResource(R.drawable.button);
                             button[index].setBackgroundColor(0xFFFF0000);
+                            soundControl(SOUND);
                             j++;
                         }
                     });
