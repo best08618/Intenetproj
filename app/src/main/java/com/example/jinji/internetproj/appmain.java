@@ -14,7 +14,7 @@ public class appmain extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button test = (Button) findViewById(R.id.testButton);
         Button memory = (Button) findViewById(R.id.memoryButton);
-        Button pitch = (Button) findViewById(R.id.pithButton);
+
 
         test.setOnClickListener(new View.OnClickListener() {
             @Override

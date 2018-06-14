@@ -33,7 +33,7 @@ public class testmain extends AppCompatActivity {
     final static int LED[] = {0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
     final int SOUND = 0x06;
     int LedData;
-    TextView score_tv, time_tv, notify, stage_num;
+    TextView score_tv, notify, stage_num;
     Timer timer;
     Timer timer_led;
     Button button[] = new Button[9];
@@ -61,7 +61,6 @@ public class testmain extends AppCompatActivity {
         score = intent.getIntExtra("score", 0);
         LedData = intent.getIntExtra("led_data", 0);
         score_tv = (TextView) findViewById(R.id.score_tv);
-        time_tv = (TextView) findViewById(R.id.time_tv);
         notify = (TextView) findViewById(R.id.notify);
         stage_num = (TextView) findViewById(R.id.stage_num);
         //stage_num.setText(stage);
@@ -111,14 +110,14 @@ public class testmain extends AppCompatActivity {
 
     public void Next(View v) {
         ++stage;
-        if (stage < 4) {
+        if (stage <= 8) {
             Intent i = new Intent(testmain.this, testmain.class);
             i.putExtra("next", stage);
             i.putExtra("score",score);
             i.putExtra("led_data", LedData);
             startActivity(i);
         } else {
-            text = TextLCDOut("  !FINISH!  ", "      "+stage);
+            text = TextLCDOut("  !FINISH!  ", "      ");
             rainbowLED();
             Intent i = new Intent(getApplicationContext(),appmain.class);
             startActivity(i);
@@ -242,14 +241,14 @@ public class testmain extends AppCompatActivity {
             @Override
             public void run() {
                 text = TextLCDOut("  NOW ON STAGE  ", "       "+stage);
-                if (j >= (stage * 3)) {
+                if (j >= (stage + 2)) {
                     button[1].post(new Runnable() {
                         public void run() {
                             reset();
                             soundControl(0);
                             notify.setText("Enter button");
                             score_tv.setText(""+score);
-                            if (num == (stage * 3)) {
+                            if (num == (stage + 2)) {
                                 LedData |= LED[stage-1];
                                 LEDControl(LedData);
                                 showDialog("Complete");
@@ -282,7 +281,7 @@ public class testmain extends AppCompatActivity {
                     });
                 }
             }
-        }, 500, 500);
+        }, 700-(50*stage), 700-(50*stage));
     }
 
     public void reset() {
