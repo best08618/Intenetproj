@@ -226,6 +226,7 @@ public class testmain extends AppCompatActivity {
                 } else {
                     LEDControl(0);
                     IOCtlClear();
+                    soundControl(0);
                     timer_led.cancel();
                 }
             }

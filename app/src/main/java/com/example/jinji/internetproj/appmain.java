@@ -23,6 +23,13 @@ public class appmain extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        memory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),ShowIpPort.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

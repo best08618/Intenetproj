@@ -9,7 +9,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:textAlignment="center"
+
         android:id="@+id/text_part"
         android:background="#F7AA97"
         android:textColor="#FFFFFF"
