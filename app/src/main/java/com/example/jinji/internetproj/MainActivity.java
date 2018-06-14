@@ -18,13 +18,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //TextView jniText = (TextView)findViewById(R.id.led);
+        final TextView jniText = (TextView)findViewById(R.id.led);
         //jniText.setText(getJNIString());
+        jniText.setText("hello");
         LedData = 0 ;
-        if(LEDControl(LedData) == 0)
-            Toast.makeText(getBaseContext(),"0",Toast.LENGTH_SHORT);
+        /*if(LEDControl(LedData) == 0)
+            Toast.makeText(MainActivity.this,"0",Toast.LENGTH_SHORT);
         else
-            Toast.makeText(getBaseContext(),"else case",Toast.LENGTH_SHORT);
+            Toast.makeText(MainActivity.this,"else case",Toast.LENGTH_SHORT);*/
         final CheckBox Led8 = (CheckBox) findViewById(R.id.led1);
         final CheckBox Led7 = (CheckBox) findViewById(R.id.led2);
         final CheckBox Led6 = (CheckBox) findViewById(R.id.led3);
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         Led1.setOnClickListener(new CheckBox.OnClickListener() {
             public void onClick(View v) {
                 if (Led1.isChecked()) {
-                    Toast.makeText(getBaseContext(),"led1",Toast.LENGTH_SHORT);
+                    Toast.makeText(MainActivity.this,"led1",Toast.LENGTH_SHORT);
+                    jniText.setText("led1 on");
                     LedData |= 0x80;
                 } else {
                     LedData &= ~(0x80);

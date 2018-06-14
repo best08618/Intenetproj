@@ -14,9 +14,10 @@
 
 JNIEXPORT jint JNICALL Java_com_example_jinji_internetproj_MainActivity_LEDControl( JNIEnv* env,jobject obj, jint data )
 {
+
     int fd,ret;
-    fd = open("/dev/led",O_WRONLY);
-    if(fd < 0) return -errno;
+    fd = open("/dev/fpga_led",O_WRONLY);
+    if(fd < 0) return -3;
 
     if(fd > 0) {
         data &= 0xff;
