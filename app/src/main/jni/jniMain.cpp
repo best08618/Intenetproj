@@ -1,6 +1,10 @@
 //
 // Created by samsung on 2018-06-14.
 //
+
+//
+// Created by samsung on 2018-06-14.
+//
 #include <jni.h>
 #include <string.h>
 #include <stdio.h>
@@ -10,9 +14,9 @@
 #include <termios.h>
 #include <sys/mman.h>
 #include <errno.h>
-#include<com_example_jinji_internetproj_MainActivity.h>
+#include<com_example_jinji_internetproj_testmain.h>
 
-JNIEXPORT jint JNICALL Java_com_example_jinji_internetproj_MainActivity_LEDControl( JNIEnv* env,jobject obj, jint data )
+JNIEXPORT jint JNICALL Java_com_example_jinji_internetproj_testmain_LEDControl( JNIEnv* env,jobject obj, jint data )
 {
 
     int fd,ret;

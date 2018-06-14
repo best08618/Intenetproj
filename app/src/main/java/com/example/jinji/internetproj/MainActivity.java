@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-
-public class MainActivity extends AppCompatActivity {
+/*
+public class MainActivity {
 
       static {
             System.loadLibrary("jniExample");
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         /*if(LEDControl(LedData) == 0)
             Toast.makeText(MainActivity.this,"0",Toast.LENGTH_SHORT);
         else
-            Toast.makeText(MainActivity.this,"else case",Toast.LENGTH_SHORT);*/
+            Toast.makeText(MainActivity.this,"else case",Toast.LENGTH_SHORT);
         final CheckBox Led8 = (CheckBox) findViewById(R.id.led1);
         final CheckBox Led7 = (CheckBox) findViewById(R.id.led2);
         final CheckBox Led6 = (CheckBox) findViewById(R.id.led3);
@@ -134,3 +134,4 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
+*/

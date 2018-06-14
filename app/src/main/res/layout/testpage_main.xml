@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SCORE:"
+        android:textSize="22sp"
+        android:id="@+id/score"/>
+    <TextView
+        android:layout_toRightOf="@+id/score"
+        android:id="@+id/score_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:textColor="#000000"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:textColor="#000000"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linear"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="22sp" />
+
+    <!--
+    00  01  02
+    03  04  05
+    06  07  08
+    -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linear"
+            android:layout_centerInParent="true" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/button00"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick1"
+                    android:scaleType="fitXY" />
+
+                <Button
+                    android:id="@+id/button01"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick2"
+                    android:scaleType="fitXY" />
+
+                <Button
+                    android:id="@+id/button02"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick3"
+                    android:scaleType="fitXY" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/button03"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick4"
+                    android:scaleType="fitXY" />
+
+                <Button
+                    android:id="@+id/button04"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick5"
+                    android:scaleType="fitXY" />
+
+                <Button
+                    android:id="@+id/button05"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick6"
+                    android:scaleType="fitXY" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/button06"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick7"
+                    android:scaleType="fitXY" />
+
+                <Button
+                    android:id="@+id/button07"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick8"
+                    android:scaleType="fitXY" />
+
+                <Button
+                    android:id="@+id/button08"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_margin="@dimen/button_margin"
+                    android:background="@drawable/button"
+                    android:onClick="onButtonClick9"
+                    android:scaleType="fitXY" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    <TextView
+        android:id="@+id/stage_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp" />
+
+</RelativeLayout>
