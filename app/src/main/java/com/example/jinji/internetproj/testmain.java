@@ -117,9 +117,10 @@ public class testmain extends AppCompatActivity {
             i.putExtra("led_data", LedData);
             startActivity(i);
         } else {
+            Intent i = new Intent(getApplicationContext(),AdapterActivity.class);
+            i.putExtra("final_score",score);
             text = TextLCDOut("  !FINISH!  ", "      ");
             rainbowLED();
-            Intent i = new Intent(getApplicationContext(),appmain.class);
             startActivity(i);
 
         }
@@ -265,7 +266,7 @@ public class testmain extends AppCompatActivity {
                     index = rand.nextInt(9);
                     if (j > 0)
                         if (index == data[j - 1])
-                            if (index == 9)
+                            if (index == 8)
                                 index = index - 1;
                             else
                                 index = index + 1;
