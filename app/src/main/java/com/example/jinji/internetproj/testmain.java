@@ -15,12 +15,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class testmain extends AppCompatActivity {
-
+ // connect with jni library
     static
     {
         System.loadLibrary("jniExample");
     }
-
+//functions from jni
     public native int LEDControl(int value);
     public native int soundControl(int val);
     public native int TextLCDOut(String str, String str2);
@@ -30,8 +30,8 @@ public class testmain extends AppCompatActivity {
     public native int IOCtlCursor(boolean bOn);
     public native int IOCtlBlink(boolean bOn);
 
-    final static int LED[] = {0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
-    final int SOUND = 0x06;
+    final static int LED[] = {0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80}; // Set LED Register values as an array
+    final int SOUND = 0x06; // 문제에서 버튼이 하나씩 변화 될 때 마다 소리가 남 (음계 : 라 )
     int LedData;
     TextView score_tv, notify, stage_num;
     Timer timer;
