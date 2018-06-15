@@ -1,5 +1,5 @@
 package com.example.jinji.internetproj;
-
+//헤헤헿 지은이가 올려따미
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
