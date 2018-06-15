@@ -23,46 +23,54 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
+//피아노 화면에서 피아노 버튼 클릭시 그에 맞는 action과 소리 재생 설정함수
 public class piano extends Activity implements View.OnTouchListener{
 
+    //소리 재생함수 library설정
     static {
         System.loadLibrary("jnipiezo");
     }
+    //jni함수 설정
     public native int PiezoControl(int value);
+
+    //소리 변수
     int PiezoData;
+
+    //피아노 버튼
     static ImageButton[] white;
     static ImageButton[] black;
-    public int[] answer = new int[6];
-    public int answer_index = 0;
+
+    //소켓통신을 위한 함수
     private Socket socket;
     private DataOutputStream writeSocket;
     private DataInputStream readSocket;
     private Handler mHandler = new Handler();
-
-    private ConnectivityManager cManager;
-    private NetworkInfo wifi;
-    private ServerSocket serverSocket;
     String ip = "";
     int port = 0;
+
+    //메세지 통신 string to int변환 변수
     int foo=0;
-    Timer timer_sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.piano);
-        (new Connect()).start();
 
+        //소리 재생 초기화
         PiezoData = 0;
         PiezoControl(PiezoData);
+
+        //intent를 넘어오면서 변수를 받아와서 비교하여 오류 여부 파악
         Intent  intent = getIntent();
         ip = intent.getStringExtra("ip");
         port = intent.getIntExtra("port", -1);
         foo = intent.getIntExtra("foo",  -1);
 
+        //image버튼 배열로 생성
         white = new ImageButton[7];
         black = new ImageButton[5];
 
+        //각각 눌린 경우 띄워지는 이미지를 settag함수로 설정
         white[0] = (ImageButton)findViewById(R.id.white1);
         white[0].setTag(new int[]{1, R.drawable.whiteback1, R.drawable.white1});
         white[1] = (ImageButton)findViewById(R.id.white2);
@@ -89,6 +97,7 @@ public class piano extends Activity implements View.OnTouchListener{
         black[4] = (ImageButton)findViewById(R.id.black5);
         black[4].setTag(new int[]{53, R.drawable.blackback5,R.drawable.black5});
 
+        //터치시 동작하는 함수 지정 ->  onTouch()함수
         white[0].setOnTouchListener(this);
         white[1].setOnTouchListener(this);
         white[2].setOnTouchListener(this);
@@ -103,7 +112,9 @@ public class piano extends Activity implements View.OnTouchListener{
         black[3].setOnTouchListener(this);
         black[4].setOnTouchListener(this);
     }
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+    //터치시 어느 이미지 버튼이 눌렸는지 구하여 playKeyHandle함수 호출
+   public boolean onTouch(View view, MotionEvent motionEvent) {
         int action = motionEvent.getAction();
         boolean bret = false;
         if (view instanceof ImageButton) {
@@ -113,29 +124,27 @@ public class piano extends Activity implements View.OnTouchListener{
         return bret;
     }
 
+    //피아노키 처리 함수
     private boolean pianoKeyHandle(ImageButton imgBtn, int action) {
         boolean bret = false;
         Object obj = imgBtn.getTag();
         if (obj != null) {
             if (obj instanceof int[]) {
                 int[] tag = (int[]) obj;
-                //answer[answer_index++/2] = tag[0];
                 if(foo == tag[0])
                     setToast(" good!!bb");
                 else{
                     setToast("NNOOOOOOOㅠㅠ");
                 }
-                Log.e(this.getClass().getName(), ip+port);
-                (new sendMessage()).start();
+                //버튼이 눌린경우
                 if (tag.length == 3) {
                     if (action == MotionEvent.ACTION_DOWN) {
+                        //눌린 이미지 출력 및 소리 재생
                         PiezoControl(tag[0]);
                         imgBtn.setImageResource(tag[1]);
                     } else if (action == MotionEvent.ACTION_UP) {
+                        //원래 이미지 출력
                         imgBtn.setImageResource(tag[2]);
-                        /*try {
-                            Thread.sleep(9 * 10);
-                          } catch (InterruptedException e) { }*/
                         PiezoControl(0);
                     } else if (action == MotionEvent.ACTION_MOVE){
                         imgBtn.setImageResource(tag[2]);
@@ -147,124 +156,8 @@ public class piano extends Activity implements View.OnTouchListener{
         return bret;
     }
 
-    class sendMessage extends Thread {
-        public void run() {
-            try {
-                Log.e(this.getClass().getName(), "sendmessage");
-                byte[] b = new byte[100];
-                b = "123".getBytes();
-                writeSocket.write(b);
-                Log.e(this.getClass().getName(), writeSocket.toString());
-            } catch (Exception e) {
-                final String recvInput = "메시지 전송에 실패하였습니다.";
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        //setToast(recvInput);
-                    }
-                });
-            }
-        }
-    }
+    //toast지정함수
     void setToast(String msg) {
         Toast.makeText( getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    class Connect extends Thread {
-        public void run() {
-            Log.d("Connect", "--Run Connect");
-            String ip_s = null;
-            int port_s = 0;
-
-            try {
-                //ip = et1.getText().toString();
-                //port = Integer.parseInt(et2.getText().toString());
-            } catch (Exception e) {
-                final String recvInput = "정확히 입력하세요!";
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        setToast(recvInput);
-                    }
-                });
-            }
-            try {
-                socket = new Socket(ip, port);
-                writeSocket = new DataOutputStream(socket.getOutputStream());
-                readSocket = new DataInputStream(socket.getInputStream());
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        setToast("연결에 성공하였습니다_piano");
-                    }
-                });
-                (new recvSocket()).start();
-            } catch (Exception e) {
-                final String recvInput = "연결에 실패하였습니다.";
-                Log.d("Connect", e.getMessage());
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        //setToast(recvInput);
-                    }
-
-                });
-
-            }
-
-        }
-    }
-    class recvSocket extends Thread {
-        public void run() {
-            try {
-                readSocket = new DataInputStream(socket.getInputStream());
-                while (true) {
-                    byte[] b = new byte[100];
-                    int ac = readSocket.read(b, 0, b.length);
-                    final String input = new String(b, 0, b.length);
-                    final String recvInput = input.trim();
-                    if (ac == -1)
-                        break;
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            setToast(recvInput);
-                        }
-
-                    });
-                }
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        setToast("연결이 종료되었습니다.");
-                    }
-
-                });
-            } catch (Exception e) {
-                final String recvInput = "연결에 문제가 발생하여 종료되었습니다..";
-                Log.d("SetServer", e.getMessage());
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        setToast(recvInput);
-                    }
-
-                });
-
-            }
-
-        }
     }
 }
