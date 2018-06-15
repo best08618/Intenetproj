@@ -5,6 +5,7 @@
 //
 // Created by samsung on 2018-06-14.
 //
+///////////////////////////////////////////////testmain과 연결되는 cpp 파일이다 ////////////////////////////////////
 #include <jni.h>
 #include <string.h>
 #include <stdio.h>
@@ -16,16 +17,17 @@
 #include <errno.h>
 #include<com_example_jinji_internetproj_testmain.h>
 
-JNIEXPORT jint JNICALL Java_com_example_jinji_internetproj_testmain_LEDControl( JNIEnv* env,jobject obj, jint data )
+//////////////////////led 를 control하는 JNI 이다////////////////////
+JNIEXPORT jint JNICALL Java_com_example_jinji_internetproj_testmain_LEDControl( JNIEnv* env,jobject obj, jint data ) // data에 값을 input으로 받음
 {
 
     int fd,ret;
-    fd = open("/dev/fpga_led",O_WRONLY);
+    fd = open("/dev/fpga_led",O_WRONLY); // device안에 있는 fpga_led파일에 접근한다.
     if(fd < 0) return -3;
 
-    if(fd > 0) {
-        data &= 0xff;
-        ret = write(fd,&data,1);
+    if(fd > 0) { // 잘 접근했을 경우
+        data &= 0xff; // 0xff 와 & 연산을 할경우에는 data 값에 따라 들어가게 된다.
+        ret = write(fd,&data,1); // data 값을 fd 에 써준다 , fpga_led 값을 다시 써준다
         close(fd);
     }
     else return fd;
@@ -36,18 +38,19 @@ JNIEXPORT jint JNICALL Java_com_example_jinji_internetproj_testmain_LEDControl( 
 
     return -1;
 }
+
 ////////////////////////////////////////////////SoundJNI
 
-JNIEXPORT jint JNICALL Java_com_example_jinji_internetproj_testmain_soundControl( JNIEnv* env, jobject thiz, jint value )
+JNIEXPORT jint JNICALL Java_com_example_jinji_internetproj_testmain_soundControl( JNIEnv* env, jobject thiz, jint value ) // value를 입력으로 받음.
 {
    int fd,ret;
    int data = value;
 
-   fd = open("/dev/fpga_piezo",O_WRONLY);
+   fd = open("/dev/fpga_piezo",O_WRONLY); // 디바이스의 fpga_piezo 에 접근한다
 
    if(fd < 0) return -errno;
 
-   ret = write(fd, &data, 1);
+   ret = write(fd, &data, 1); // 입력받은 data값을 write하여 피에조의 값을 변경한다.
    close(fd);
 
    if(ret == 1) return 0;
@@ -150,7 +153,7 @@ int TextLCDIoctl(int cmd, char *buf)
 	return ret;
 }
 
-
+//data를 2개 받아 LCD의 각 줄에 하나씩 보여주는 함수이다.
 jint
 Java_com_example_jinji_internetproj_testmain_TextLCDOut( JNIEnv* env,
 					jobject thiz, jstring data0, jstring data1 )
@@ -164,14 +167,14 @@ Java_com_example_jinji_internetproj_testmain_TextLCDOut( JNIEnv* env,
 
 	initialize();
 
-	buf0 = (char *)(*env).GetStringUTFChars(data0,&iscopy);
+	buf0 = (char *)(*env).GetStringUTFChars(data0,&iscopy); //JNI에서 STRING접근하는 방법이다
 	buf1 = (char *)(*env).GetStringUTFChars(data1,&iscopy);
 
-	strcommand.pos = 0;
+	strcommand.pos = 0;           //첫번째 string 을 첫번째 줄에 표시해준다.
 	ioctl(fd,TEXTLCD_DD_ADDRESS,&strcommand,32);
 	ret = write(fd,buf0,strlen(buf0));
 
-	strcommand.pos = 40;
+	strcommand.pos = 40;        // 두번째 string을 두번째 줄에 표시해준다.
 	ioctl(fd,TEXTLCD_DD_ADDRESS,&strcommand,32);
 	ret = write(fd,buf1,strlen(buf1));
 
@@ -209,7 +212,7 @@ jint
 Java_com_example_jinji_internetproj_testmain_IOCtlClear( JNIEnv* env,
 						jobject thiz )
 {
-	initialize();
+	initialize();       // LCD 화면을 INITIALIZE 해준다
 	return TextLCDIoctl(TEXTLCD_CLEAR,NULL);
 }
 
